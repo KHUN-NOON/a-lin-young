@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "format": "prettier --write . && eslint --fix .",
     "check": "prettier --check .",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
