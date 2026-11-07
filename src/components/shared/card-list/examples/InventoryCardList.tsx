@@ -6,7 +6,9 @@ import { useLanguage } from '@/context/LanguageContext'
 import type { InventoryItem } from '@/types'
 
 const getInventoryKey = (item: InventoryItem) => item.id
-const renderInventoryCard = (item: InventoryItem) => <InventoryCard item={item} />
+const renderInventoryCard = (item: InventoryItem) => (
+  <InventoryCard item={item} />
+)
 const renderSkeleton = () => <InventoryCardSkeleton />
 
 export interface InventoryCardListProps {
@@ -47,7 +49,11 @@ export function InventoryCardList(props: InventoryCardListProps) {
           <CardList.Error className="p-4 text-sm text-destructive" />
           <CardList.Container />
           <CardList.Sentinel />
-          <CardList.Loading when="next" renderSkeleton={renderSkeleton} className="mt-4" />
+          <CardList.Loading
+            when="next"
+            renderSkeleton={renderSkeleton}
+            className="mt-4"
+          />
           <CardList.End className="p-4 text-center text-xs text-muted-foreground">
             {t('inventory.endOfInventory')}
           </CardList.End>

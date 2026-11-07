@@ -19,14 +19,16 @@ export const BREAKPOINT_ORDER: ReadonlyArray<Breakpoint> = [
   '2xl',
 ]
 
-export const BREAKPOINT_MIN_WIDTH: Record<Exclude<Breakpoint, 'base'>, number> =
-  {
-    sm: 640,
-    md: 768,
-    lg: 1024,
-    xl: 1280,
-    '2xl': 1536,
-  }
+export const BREAKPOINT_MIN_WIDTH: Record<
+  Exclude<Breakpoint, 'base'>,
+  number
+> = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1536,
+}
 
 /** Mobile-first cascade: the value of the largest specified breakpoint <= active. */
 export function resolveResponsive<T>(

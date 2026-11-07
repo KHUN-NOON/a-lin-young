@@ -20,7 +20,7 @@ The system utilizes Role-Based Access Control (RBAC) to restrict actions based o
 | **Generate & View Reports**        |  ✅   |            ❌            |
 | **Manage Users & Roles**           |  ✅   |            ❌            |
 | **Trigger Manual Sync**            |  ✅   |            ✅            |
-| **View Activity Log**              |  ✅   |  ❌ (Admin can grant)    |
+| **View Activity Log**              |  ✅   |   ❌ (Admin can grant)   |
 
 _Permissions are role defaults. Admin can grant individual permissions (e.g., `activity_log.view`) to a Sale Person; grants are stored server-side, delivered in the session, and cached in `session.permissions` for offline gating (the server re-validates on sync/pull)._
 
@@ -93,14 +93,14 @@ _Permissions are role defaults. Admin can grant individual permissions (e.g., `a
 
 ### 5.7 Conflict Resolution
 
-| Data type                                | Strategy                                                                                                      |
-| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
-| Item name, category, SKU, other metadata | **Last Write Wins** by `updatedAt` (server time authoritative; tie-break by `deviceId`).                       |
-| Current buying/selling price             | LWW on the current value. Every change still appends to `price_history`, so no price is ever lost.            |
-| `price_history`, invoices, invoice items | **Append-only / immutable**: no conflicts. Corrections are new records (e.g., invoice `void` status).         |
-| `stockLevel`                             | **Never overwritten.** Stock changes are synced as signed deltas (`stock_movements`); the server sums them.   |
-| Edit vs. delete                          | Delete wins unless the edit is newer **and** the user chooses to restore; flagged as a conflict.              |
-| Critical conflicts                       | Entity set to `syncStatus = 'conflict'`, both versions kept in `conflicts`, UI asks the user to choose.       |
+| Data type                                | Strategy                                                                                                    |
+| :--------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| Item name, category, SKU, other metadata | **Last Write Wins** by `updatedAt` (server time authoritative; tie-break by `deviceId`).                    |
+| Current buying/selling price             | LWW on the current value. Every change still appends to `price_history`, so no price is ever lost.          |
+| `price_history`, invoices, invoice items | **Append-only / immutable**: no conflicts. Corrections are new records (e.g., invoice `void` status).       |
+| `stockLevel`                             | **Never overwritten.** Stock changes are synced as signed deltas (`stock_movements`); the server sums them. |
+| Edit vs. delete                          | Delete wins unless the edit is newer **and** the user chooses to restore; flagged as a conflict.            |
+| Critical conflicts                       | Entity set to `syncStatus = 'conflict'`, both versions kept in `conflicts`, UI asks the user to choose.     |
 
 "Critical" means: the same item's buying price edited by different users on different devices within one sync window with differing values, or an edit conflicting with a delete/void. Conflicts are shown in a badge on the sync status indicator and a resolution screen (Admin resolves; Sale Person sees read-only notice).
 
@@ -141,20 +141,20 @@ Custom REST API; all endpoints require a bearer token and the server re-validate
 
 _Common fields on all **synced entity** tables: `id` (UUIDv7), `createdAt`, `updatedAt` (ms epoch), `deletedAt?`, `version` (server-assigned revision), `syncStatus` (`synced` | `pending` | `conflict`). They are omitted below for brevity unless noted._
 
-| Table                | Fields (beyond common)                                                                                                                                         | Dexie indexes                                      |
-| :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------- |
-| **`categories`**     | `name`, `parentId?`                                                                                                                                            | `id, name, syncStatus`                             |
-| **`items`**          | `sku`, `name`, `categoryId`, `barcode?`, `unit`, `stockLevel` (derived cache), `currentBuyingPrice` (int), `currentSellingPrice` (int)                         | `id, sku, name, categoryId, updatedAt, syncStatus` |
-| **`price_history`**  | `itemId`, `priceType` (`buying`/`selling`), `amount` (int), `effectiveDate`, `recordedBy` (append-only)                                                        | `id, itemId, [itemId+priceType], syncStatus`       |
-| **`stock_movements`**| `itemId`, `delta` (signed int), `reason` (`sale`/`restock`/`adjustment`/`void`), `refId?` (invoice id), `recordedBy` (append-only)                              | `id, itemId, refId, syncStatus`                    |
-| **`invoices`**       | `invoiceNumber` (local, unique), `serverInvoiceNumber?`, `totalAmount` (int), `date`, `createdBy`, `deviceId`, `status` (`completed`/`void`)                    | `id, &invoiceNumber, date, createdBy, syncStatus`  |
-| **`invoice_items`**  | `invoiceId`, `itemId`, `quantity`, `unitPrice` (int, snapshot), `subTotal` (int); synced with parent invoice                                                   | `id, invoiceId, itemId`                            |
-| **`sync_queue`**     | `sequence` (auto-inc), `idempotencyKey`, `operation` (`CREATE_INVOICE`, `UPDATE_ITEM`, `UPDATE_PRICE`, `DELETE_ITEM`, …), `entityType`, `entityId`, `payload`, `dependsOn?`, `status` (`queued`/`in_flight`/`failed`/`blocked`), `retryCount`, `nextRetryAt`, `lastError?`, `createdAt` | `++sequence, &idempotencyKey, status, entityId`    |
-| **`activity_logs`**  | `userId`, `userName`, `deviceId`, `action` (`create`/`update`/`delete`/`restore`/`void`), `entityType`, `entityId`, `entityLabel`, `changes`, `occurredAt`, `serverReceivedAt?` (append-only; no `updatedAt`/`deletedAt`) | `id, entityId, userId, occurredAt, syncStatus`     |
-| **`conflicts`**      | `entityType`, `entityId`, `localVersion`, `serverVersion`, `detectedAt`, `resolvedAt?`, `resolution?` (`local`/`server`)                                       | `id, entityId, resolvedAt`                         |
-| **`session`**        | `userId`, `name`, `role` (`admin`/`sale_person`), `permissions` (granted extras, e.g. `activity_log.view`), tokens, `lastOnlineAt`, `offlineValidUntil` (single row, local only)                                         | `userId`                                           |
-| **`users_cache`**    | `id`, `name`, `role` (display lookups only; local only, not synced)                                                                                           | `id`                                               |
-| **`meta`**           | key/value: `deviceId`, `deviceCode`, `invoiceSequence`, `lastPulledCursor:{entity}`, `lastSyncedAt`, `schemaVersion` (local only)                              | `key`                                              |
+| Table                 | Fields (beyond common)                                                                                                                                                                                                                                                                  | Dexie indexes                                      |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------- |
+| **`categories`**      | `name`, `parentId?`                                                                                                                                                                                                                                                                     | `id, name, syncStatus`                             |
+| **`items`**           | `sku`, `name`, `categoryId`, `barcode?`, `unit`, `stockLevel` (derived cache), `currentBuyingPrice` (int), `currentSellingPrice` (int)                                                                                                                                                  | `id, sku, name, categoryId, updatedAt, syncStatus` |
+| **`price_history`**   | `itemId`, `priceType` (`buying`/`selling`), `amount` (int), `effectiveDate`, `recordedBy` (append-only)                                                                                                                                                                                 | `id, itemId, [itemId+priceType], syncStatus`       |
+| **`stock_movements`** | `itemId`, `delta` (signed int), `reason` (`sale`/`restock`/`adjustment`/`void`), `refId?` (invoice id), `recordedBy` (append-only)                                                                                                                                                      | `id, itemId, refId, syncStatus`                    |
+| **`invoices`**        | `invoiceNumber` (local, unique), `serverInvoiceNumber?`, `totalAmount` (int), `date`, `createdBy`, `deviceId`, `status` (`completed`/`void`)                                                                                                                                            | `id, &invoiceNumber, date, createdBy, syncStatus`  |
+| **`invoice_items`**   | `invoiceId`, `itemId`, `quantity`, `unitPrice` (int, snapshot), `subTotal` (int); synced with parent invoice                                                                                                                                                                            | `id, invoiceId, itemId`                            |
+| **`sync_queue`**      | `sequence` (auto-inc), `idempotencyKey`, `operation` (`CREATE_INVOICE`, `UPDATE_ITEM`, `UPDATE_PRICE`, `DELETE_ITEM`, …), `entityType`, `entityId`, `payload`, `dependsOn?`, `status` (`queued`/`in_flight`/`failed`/`blocked`), `retryCount`, `nextRetryAt`, `lastError?`, `createdAt` | `++sequence, &idempotencyKey, status, entityId`    |
+| **`activity_logs`**   | `userId`, `userName`, `deviceId`, `action` (`create`/`update`/`delete`/`restore`/`void`), `entityType`, `entityId`, `entityLabel`, `changes`, `occurredAt`, `serverReceivedAt?` (append-only; no `updatedAt`/`deletedAt`)                                                               | `id, entityId, userId, occurredAt, syncStatus`     |
+| **`conflicts`**       | `entityType`, `entityId`, `localVersion`, `serverVersion`, `detectedAt`, `resolvedAt?`, `resolution?` (`local`/`server`)                                                                                                                                                                | `id, entityId, resolvedAt`                         |
+| **`session`**         | `userId`, `name`, `role` (`admin`/`sale_person`), `permissions` (granted extras, e.g. `activity_log.view`), tokens, `lastOnlineAt`, `offlineValidUntil` (single row, local only)                                                                                                        | `userId`                                           |
+| **`users_cache`**     | `id`, `name`, `role` (display lookups only; local only, not synced)                                                                                                                                                                                                                     | `id`                                               |
+| **`meta`**            | key/value: `deviceId`, `deviceCode`, `invoiceSequence`, `lastPulledCursor:{entity}`, `lastSyncedAt`, `schemaVersion` (local only)                                                                                                                                                       | `key`                                              |
 
 _Notes:_
 

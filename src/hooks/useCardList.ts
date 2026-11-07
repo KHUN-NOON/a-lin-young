@@ -122,7 +122,9 @@ export function useCardList<TItem>(options: UseCardListOptions<TItem>) {
       const next = scroller
         ? rect.top - scroller.getBoundingClientRect().top + scroller.scrollTop
         : rect.top + window.scrollY
-      setMeasuredMargin((prev) => (Math.abs(prev - next) < 1 ? prev : Math.round(next)))
+      setMeasuredMargin((prev) =>
+        Math.abs(prev - next) < 1 ? prev : Math.round(next),
+      )
     }
     update()
     window.addEventListener('resize', update)
@@ -319,7 +321,9 @@ export function useCardList<TItem>(options: UseCardListOptions<TItem>) {
   const firstKey = items.length > 0 ? getItemKey(items[0]) : null
   const tabStopKey = focusedIndex >= 0 ? focusedKey : firstKey
 
-  const firstRenderedItem = virtualRows.length ? virtualRows[0].index * columns : 0
+  const firstRenderedItem = virtualRows.length
+    ? virtualRows[0].index * columns
+    : 0
   const lastRenderedItem = virtualRows.length
     ? (virtualRows[virtualRows.length - 1].index + 1) * columns - 1
     : -1
@@ -413,7 +417,8 @@ export function useCardList<TItem>(options: UseCardListOptions<TItem>) {
           if (event.target === itemEl && selectionMode !== 'none') {
             event.preventDefault()
             const target = items[current]
-            if (target !== undefined) toggleSelection(getItemKeyRef.current(target))
+            if (target !== undefined)
+              toggleSelection(getItemKeyRef.current(target))
           }
           return
         default:

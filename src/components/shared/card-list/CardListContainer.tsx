@@ -57,7 +57,10 @@ export function CardListContainer({
 
   if (!list.isVirtualized) {
     return (
-      <div {...containerProps} className={cn(layoutClass, gapClassName, className)}>
+      <div
+        {...containerProps}
+        className={cn(layoutClass, gapClassName, className)}
+      >
         {list.items.map((item, index) => {
           const key = getItemKey(item)
           return (

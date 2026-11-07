@@ -18,7 +18,11 @@ export function CardListDemo() {
 
   return (
     <div className="space-y-3">
-      <div role="group" aria-label={t('demo.dataSource')} className="flex gap-2">
+      <div
+        role="group"
+        aria-label={t('demo.dataSource')}
+        className="flex gap-2"
+      >
         {tabs.map(({ key, label }) => (
           <button
             key={key}

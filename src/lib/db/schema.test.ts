@@ -43,26 +43,53 @@ describe('AppDB schema', () => {
     const name = fresh()
     const old = new Dexie(name)
     old.version(2).stores({ inventory: 'id, name, quantity, unit, updatedAt' })
-    await old.table('inventory').add({ id: 'a', name: 'Wire', quantity: 3, unit: 'm', updatedAt: 1 })
+    await old
+      .table('inventory')
+      .add({ id: 'a', name: 'Wire', quantity: 3, unit: 'm', updatedAt: 1 })
     old.close()
 
     const db = new AppDB(name)
-    expect(await db.inventory.get('a')).toMatchObject({ name: 'Wire', quantity: 3 })
+    expect(await db.inventory.get('a')).toMatchObject({
+      name: 'Wire',
+      quantity: 3,
+    })
     expect(await db.meta.get('deviceId')).toBeDefined()
     db.close()
   })
 
   it('enforces unique invoiceNumber and idempotencyKey', async () => {
     const db = new AppDB(fresh())
-    const base = { createdAt: 1, updatedAt: 1, version: 0, syncStatus: 'pending' as const }
-    const inv = { ...base, invoiceNumber: 'D1-20261107-1', totalAmount: 1, date: 1, createdBy: 'u', deviceId: 'd', status: 'completed' as const }
+    const base = {
+      createdAt: 1,
+      updatedAt: 1,
+      version: 0,
+      syncStatus: 'pending' as const,
+    }
+    const inv = {
+      ...base,
+      invoiceNumber: 'D1-20261107-1',
+      totalAmount: 1,
+      date: 1,
+      createdBy: 'u',
+      deviceId: 'd',
+      status: 'completed' as const,
+    }
     await db.invoices.add({ id: '1', ...inv })
     await expect(db.invoices.add({ id: '2', ...inv })).rejects.toThrow()
 
-    const q = { operation: 'UPDATE_ITEM', entityType: 'items', entityId: 'x', payload: {}, status: 'queued' as const, retryCount: 0, createdAt: 1 }
+    const q = {
+      operation: 'UPDATE_ITEM',
+      entityType: 'items',
+      entityId: 'x',
+      payload: {},
+      status: 'queued' as const,
+      retryCount: 0,
+      createdAt: 1,
+    }
     await db.sync_queue.add({ idempotencyKey: 'k', ...q })
-    await expect(db.sync_queue.add({ idempotencyKey: 'k', ...q })).rejects.toThrow()
+    await expect(
+      db.sync_queue.add({ idempotencyKey: 'k', ...q }),
+    ).rejects.toThrow()
     db.close()
   })
 })
-

@@ -34,9 +34,15 @@ export function DexieInventoryExample({
   }, [database, count])
 
   const editFirst = useCallback(async () => {
-    const first = await database.inventory.orderBy('updatedAt').reverse().first()
+    const first = await database.inventory
+      .orderBy('updatedAt')
+      .reverse()
+      .first()
     // Edit without touching `updatedAt`: the row keeps its position and scroll is untouched.
-    if (first) await database.inventory.update(first.id, { quantity: first.quantity + 1 })
+    if (first)
+      await database.inventory.update(first.id, {
+        quantity: first.quantity + 1,
+      })
   }, [database])
 
   const addItem = useCallback(async () => {
@@ -52,7 +58,10 @@ export function DexieInventoryExample({
   }, [database])
 
   const deleteFirst = useCallback(async () => {
-    const first = await database.inventory.orderBy('updatedAt').reverse().first()
+    const first = await database.inventory
+      .orderBy('updatedAt')
+      .reverse()
+      .first()
     if (first) await database.inventory.delete(first.id)
   }, [database])
 
@@ -60,13 +69,25 @@ export function DexieInventoryExample({
     <div className="space-y-3">
       <InventoryFilterForm onChange={setFilter} />
       <div className="flex flex-wrap gap-2 text-sm">
-        <button type="button" className="rounded-md border px-3 py-1" onClick={addItem}>
+        <button
+          type="button"
+          className="rounded-md border px-3 py-1"
+          onClick={addItem}
+        >
           {t('demo.addItem')}
         </button>
-        <button type="button" className="rounded-md border px-3 py-1" onClick={editFirst}>
+        <button
+          type="button"
+          className="rounded-md border px-3 py-1"
+          onClick={editFirst}
+        >
           {t('demo.editFirst')}
         </button>
-        <button type="button" className="rounded-md border px-3 py-1" onClick={deleteFirst}>
+        <button
+          type="button"
+          className="rounded-md border px-3 py-1"
+          onClick={deleteFirst}
+        >
           {t('demo.deleteFirst')}
         </button>
       </div>

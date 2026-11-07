@@ -1,7 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { defaultInventoryFilter, inventoryFilterSchema } from '@/lib/schemas/inventoryFilter'
+import {
+  defaultInventoryFilter,
+  inventoryFilterSchema,
+} from '@/lib/schemas/inventoryFilter'
 import type { InventoryFilter } from '@/lib/schemas/inventoryFilter'
 import { useLanguage } from '@/context/LanguageContext'
 import type { TranslationKey } from '@/lib/i18n'

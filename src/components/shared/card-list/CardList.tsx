@@ -40,7 +40,8 @@ function CardListRoot<TItem>({
     getItemKeyRef.current = options.getItemKey
   })
   const stableRenderCard = useCallback(
-    (item: unknown, index: number) => renderCardRef.current(item as TItem, index),
+    (item: unknown, index: number) =>
+      renderCardRef.current(item as TItem, index),
     [],
   )
   const stableGetItemKey = useCallback(

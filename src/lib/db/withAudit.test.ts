@@ -49,7 +49,10 @@ describe('withAudit', () => {
       table: db.categories,
     })
     expect((await db.categories.get('c1'))?.syncStatus).toBe('pending')
-    expect(await db.activity_logs.get(log.id)).toMatchObject({ userId: 'u1', action: 'create' })
+    expect(await db.activity_logs.get(log.id)).toMatchObject({
+      userId: 'u1',
+      action: 'create',
+    })
     const q = await db.sync_queue.toArray()
     expect(q).toHaveLength(1)
     expect(q[0].status).toBe('queued')
@@ -77,4 +80,3 @@ describe('withAudit', () => {
     db.close()
   })
 })
-

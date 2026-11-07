@@ -210,7 +210,8 @@ const NavGroup: React.FC<{ item: NavItem }> = ({ item }) => {
 }
 
 const isDesktop = () =>
-  typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+  typeof window !== 'undefined' &&
+  window.matchMedia('(min-width: 768px)').matches
 
 /**
  * Sidebar – mobile-first.
@@ -267,9 +268,7 @@ export const Sidebar: React.FC = () => {
           )}
         >
           <BrandLogo />
-          <span
-            className={cn('flex-1 text-lg font-semibold', labelClass)}
-          >
+          <span className={cn('flex-1 text-lg font-semibold', labelClass)}>
             ALY
           </span>
           <button

@@ -87,6 +87,6 @@ Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
     return 1000
   },
 })
-Element.prototype.scrollTo = (() => undefined)
+Element.prototype.scrollTo = () => undefined
 Element.prototype.scrollIntoView = () => undefined
-window.scrollTo = (() => undefined)
+window.scrollTo = () => undefined

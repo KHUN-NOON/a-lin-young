@@ -8,11 +8,7 @@ import { setViewportWidth } from '@/test/setup'
 
 function MobileState() {
   const { mobileOpen, expanded } = useLayout()
-  return (
-    <output>
-      {`mobile:${mobileOpen} expanded:${expanded}`}
-    </output>
-  )
+  return <output>{`mobile:${mobileOpen} expanded:${expanded}`}</output>
 }
 
 const setup = () =>

@@ -129,7 +129,9 @@ export const UserMenu: React.FC = () => {
         >
           {user.initials}
         </span>
-        <span className="hidden text-sm font-medium sm:inline">{user.name}</span>
+        <span className="hidden text-sm font-medium sm:inline">
+          {user.name}
+        </span>
         <ChevronDown
           aria-hidden="true"
           className={cn(

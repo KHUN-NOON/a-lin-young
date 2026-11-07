@@ -23,7 +23,12 @@ type HarnessProps = Partial<CardListProps<Row>> & {
   extra?: ReactNode
 }
 
-function Harness({ count = 10, useScrollElement = true, extra, ...rest }: HarnessProps) {
+function Harness({
+  count = 10,
+  useScrollElement = true,
+  extra,
+  ...rest
+}: HarnessProps) {
   const ref = useRef<HTMLDivElement | null>(null)
   return (
     <div ref={ref} data-testid="scroller">
@@ -79,7 +84,10 @@ describe('CardList windowing', () => {
   it('renders everything without virtualization below the threshold', () => {
     render(<Harness count={20} />)
     expect(screen.getAllByRole('listitem')).toHaveLength(20)
-    expect(screen.getByRole('list')).toHaveAttribute('data-virtualized', 'false')
+    expect(screen.getByRole('list')).toHaveAttribute(
+      'data-virtualized',
+      'false',
+    )
   })
 
   it('uses a static fallback window when the scroll area has no size', () => {
@@ -115,11 +123,21 @@ describe('CardList infinite scroll', () => {
   it('virtualized: fetches once near the end, guarding duplicates', () => {
     const fetchNextPage = vi.fn(() => new Promise<void>(() => undefined))
     const { rerender } = render(
-      <Harness count={5} virtualized hasNextPage fetchNextPage={fetchNextPage} />,
+      <Harness
+        count={5}
+        virtualized
+        hasNextPage
+        fetchNextPage={fetchNextPage}
+      />,
     )
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
     rerender(
-      <Harness count={5} virtualized hasNextPage fetchNextPage={fetchNextPage} />,
+      <Harness
+        count={5}
+        virtualized
+        hasNextPage
+        fetchNextPage={fetchNextPage}
+      />,
     )
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
   })
@@ -141,14 +159,21 @@ describe('CardList infinite scroll', () => {
   it('non-virtualized: sentinel + IntersectionObserver, guarded and cleaned up', () => {
     const fetchNextPage = vi.fn(() => new Promise<void>(() => undefined))
     const { unmount } = render(
-      <Harness count={5} hasNextPage fetchNextPage={fetchNextPage} rootMargin="50px" />,
+      <Harness
+        count={5}
+        hasNextPage
+        fetchNextPage={fetchNextPage}
+        rootMargin="50px"
+      />,
     )
     const observer = MockIntersectionObserver.instances.at(-1)!
     observer.trigger(true)
     observer.trigger(true)
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
     unmount()
-    expect(MockIntersectionObserver.instances.every((o) => o.disconnected)).toBe(true)
+    expect(
+      MockIntersectionObserver.instances.every((o) => o.disconnected),
+    ).toBe(true)
   })
 
   it('does not render a sentinel when virtualized', () => {
@@ -218,7 +243,9 @@ describe('CardList performance', () => {
   it('re-renders items when renderKey changes', () => {
     const card = vi.fn((r: Row) => <span>{r.name}</span>)
     const items = makeItems(3)
-    const { rerender } = render(<Harness items={items} renderCard={card} renderKey={1} />)
+    const { rerender } = render(
+      <Harness items={items} renderCard={card} renderKey={1} />,
+    )
     card.mockClear()
     rerender(<Harness items={items} renderCard={card} renderKey={2} />)
     expect(card).toHaveBeenCalledTimes(3)
@@ -237,7 +264,12 @@ describe('CardList keyboard & selection', () => {
     const scrollToIndex = vi.fn()
     const virtualizer: RowVirtualizer = {
       getVirtualItems: () =>
-        [0, 1, 2].map((index) => ({ key: index, index, start: index * 100, size: 100 })),
+        [0, 1, 2].map((index) => ({
+          key: index,
+          index,
+          start: index * 100,
+          size: 100,
+        })),
       getTotalSize: () => 1000,
       measureElement: () => undefined,
       scrollToIndex,
@@ -269,7 +301,11 @@ describe('CardList keyboard & selection', () => {
     const user = userEvent.setup()
     const onSelectionChange = vi.fn()
     render(
-      <Harness count={3} selectionMode="multiple" onSelectionChange={onSelectionChange} />,
+      <Harness
+        count={3}
+        selectionMode="multiple"
+        onSelectionChange={onSelectionChange}
+      />,
     )
     const items = screen.getAllByRole('listitem')
     await user.click(items[0])

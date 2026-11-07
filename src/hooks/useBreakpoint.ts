@@ -6,7 +6,10 @@ const queryFor = (bp: Exclude<Breakpoint, 'base'>) =>
   `(min-width: ${BREAKPOINT_MIN_WIDTH[bp]}px)`
 
 function getActiveBreakpoint(): Breakpoint {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.matchMedia !== 'function'
+  ) {
     return 'base'
   }
   let active: Breakpoint = 'base'
@@ -18,14 +21,18 @@ function getActiveBreakpoint(): Breakpoint {
 }
 
 function subscribe(onChange: () => void): () => void {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.matchMedia !== 'function'
+  ) {
     return () => undefined
   }
   const lists = BREAKPOINT_ORDER.filter(
     (bp): bp is Exclude<Breakpoint, 'base'> => bp !== 'base',
   ).map((bp) => window.matchMedia(queryFor(bp)))
   lists.forEach((mql) => mql.addEventListener('change', onChange))
-  return () => lists.forEach((mql) => mql.removeEventListener('change', onChange))
+  return () =>
+    lists.forEach((mql) => mql.removeEventListener('change', onChange))
 }
 
 /**

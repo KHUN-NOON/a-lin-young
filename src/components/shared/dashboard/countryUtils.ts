@@ -10,4 +10,3 @@ export const countryFlag = (code: string): string =>
 /** Localized country name for the active language. */
 export const countryName = (code: string, language: string): string =>
   new Intl.DisplayNames(language, { type: 'region' }).of(code) ?? code
-

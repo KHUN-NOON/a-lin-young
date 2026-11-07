@@ -13,8 +13,12 @@ describe('UserMenu', () => {
     await user.click(trigger)
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
     expect(screen.getByRole('menu', { name: /user menu/i })).toBeInTheDocument()
-    expect(screen.getByRole('menuitem', { name: /edit profile/i })).toHaveFocus()
-    expect(screen.getByRole('menuitem', { name: /sign out/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('menuitem', { name: /edit profile/i }),
+    ).toHaveFocus()
+    expect(
+      screen.getByRole('menuitem', { name: /sign out/i }),
+    ).toBeInTheDocument()
 
     await user.keyboard('{Escape}')
     expect(screen.queryByRole('menu')).not.toBeInTheDocument()

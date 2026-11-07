@@ -2,10 +2,7 @@ import { render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { LanguageProvider, useLanguage } from './LanguageContext'
-import {
-  LANGUAGE_STORAGE_KEY,
-  dictionaries,
-} from '@/lib/i18n'
+import { LANGUAGE_STORAGE_KEY, dictionaries } from '@/lib/i18n'
 import type { TranslationKey } from '@/lib/i18n'
 
 function LanguageConsumer() {
@@ -54,7 +51,9 @@ describe('LanguageContext and i18n', () => {
     await user.click(screen.getByRole('button', { name: 'Switch to Burmese' }))
 
     expect(screen.getByTestId('current-lang')).toHaveTextContent('my')
-    expect(screen.getByTestId('dashboard-title')).toHaveTextContent('ဒက်ရှ်ဘုတ်')
+    expect(screen.getByTestId('dashboard-title')).toHaveTextContent(
+      'ဒက်ရှ်ဘုတ်',
+    )
     expect(document.documentElement.lang).toBe('my')
     expect(localStorage.getItem(LANGUAGE_STORAGE_KEY)).toBe('my')
 

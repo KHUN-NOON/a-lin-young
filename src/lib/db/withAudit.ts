@@ -10,10 +10,20 @@ import type {
 import { uuidv7 } from '@/utils/uuid'
 
 /** Bookkeeping fields excluded from activity-log diffs. */
-const IGNORED_FIELDS = new Set(['updatedAt', 'syncStatus', 'version', 'createdAt'])
+const IGNORED_FIELDS = new Set([
+  'updatedAt',
+  'syncStatus',
+  'version',
+  'createdAt',
+])
 
 /** Never written to the log (PROJECT_SPEC §5.10). */
-const SECRET_FIELDS = new Set(['accessToken', 'refreshToken', 'password', 'token'])
+const SECRET_FIELDS = new Set([
+  'accessToken',
+  'refreshToken',
+  'password',
+  'token',
+])
 
 export function diffEntities(
   before: object | undefined,
@@ -24,7 +34,8 @@ export function diffEntities(
   const changes: ActivityLog['changes'] = {}
   for (const key of new Set([...Object.keys(b), ...Object.keys(a)])) {
     if (IGNORED_FIELDS.has(key) || SECRET_FIELDS.has(key)) continue
-    if (JSON.stringify(b[key]) !== JSON.stringify(a[key])) changes[key] = [b[key], a[key]]
+    if (JSON.stringify(b[key]) !== JSON.stringify(a[key]))
+      changes[key] = [b[key], a[key]]
   }
   return changes
 }
@@ -106,4 +117,3 @@ export async function withAudit<T extends SyncedEntity>(
     return log
   })
 }
-

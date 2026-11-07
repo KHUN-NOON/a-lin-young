@@ -30,23 +30,20 @@ export function useDexieInventory(
     setLimit(pageSize)
   }
 
-  const result = useLiveQuery(
-    async () => {
-      const needle = filter.search.toLowerCase()
-      const rows = await database.inventory
-        .orderBy('updatedAt')
-        .reverse()
-        .filter(
-          (item) =>
-            (!needle || item.name.toLowerCase().includes(needle)) &&
-            (!filter.lowStockOnly || item.quantity < LOW_STOCK_LIMIT),
-        )
-        .limit(limit + 1)
-        .toArray()
-      return { limit, rows }
-    },
-    [limit, filter.search, filter.lowStockOnly, database],
-  )
+  const result = useLiveQuery(async () => {
+    const needle = filter.search.toLowerCase()
+    const rows = await database.inventory
+      .orderBy('updatedAt')
+      .reverse()
+      .filter(
+        (item) =>
+          (!needle || item.name.toLowerCase().includes(needle)) &&
+          (!filter.lowStockOnly || item.quantity < LOW_STOCK_LIMIT),
+      )
+      .limit(limit + 1)
+      .toArray()
+    return { limit, rows }
+  }, [limit, filter.search, filter.lowStockOnly, database])
 
   const items = result ? result.rows.slice(0, result.limit) : []
   return {

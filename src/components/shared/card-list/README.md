@@ -39,14 +39,14 @@ Both are mounted on the dashboard through `CardListDemo`.
 
 ### Components
 
-| Component | Purpose |
-| --- | --- |
-| `<CardList<TItem>>` | Root. Runs `useCardList`, provides context, renders an `aria-live` region. |
-| `.Container` | The list/grid wrapper (`role="list"`). Renders items or virtual rows via `renderCard`. |
-| `.Item` | Memoized wrapper around one card (used by Container; props-only, no context). |
+| Component                                 | Purpose                                                                                                                                     |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<CardList<TItem>>`                       | Root. Runs `useCardList`, provides context, renders an `aria-live` region.                                                                  |
+| `.Container`                              | The list/grid wrapper (`role="list"`). Renders items or virtual rows via `renderCard`.                                                      |
+| `.Item`                                   | Memoized wrapper around one card (used by Container; props-only, no context).                                                               |
 | `.Empty` / `.Loading` / `.Error` / `.End` | State slots. `Loading` takes `when="initial" \| "next"`, `count`, `renderSkeleton`. `Error` accepts a render function `({ error, retry })`. |
-| `.Sentinel` | IntersectionObserver target (non-virtualized only). |
-| `.LoadMore` | Accessible "Load more" button fallback. |
+| `.Sentinel`                               | IntersectionObserver target (non-virtualized only).                                                                                         |
+| `.LoadMore`                               | Accessible "Load more" button fallback.                                                                                                     |
 
 ### `useCardList(options)` returns
 
@@ -56,29 +56,29 @@ Prop getters: `getContainerProps()`, `getItemProps(item, index)`, `getSentinelPr
 
 ### Props (`CardListProps<TItem>` = `UseCardListOptions<TItem>` + render props)
 
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `items` | `TItem[]` | – | |
-| `getItemKey` | `(item) => string \| number` | – | Must be stable & unique; keys the measurement cache. |
-| `renderCard` | `(item, index) => ReactNode` | – | Identity changes don't re-render unchanged items. |
-| `renderKey` | `unknown` | – | Change to force item re-render if `renderCard` closes over outside state. |
-| `layout` | `ResponsiveValue<'list' \| 'grid'>` | `{ base: 'list', md: 'grid' }` | Mobile-first. |
-| `columns` | `ResponsiveValue<1..6>` | `{ base: 1, sm: 2, lg: 3, xl: 4 }` | Only used while `grid`. |
-| `virtualized` | `boolean` | `items.length > virtualizeThreshold` | |
-| `virtualizeThreshold` | `number` | `100` | |
-| `estimateSize` | `number` | `120` | Initial row height guess (px). |
-| `overscan` | `number` | `4` | Rows. |
-| `rowGap` | `number` | `16` | Virtual row gap (px); match your `gapClassName` (`gap-4` = 16). |
-| `scrollElementRef` | `RefObject<HTMLElement>` | window | Custom scroller. |
-| `scrollMargin` | `number` | measured | List offset in the scroll area. |
-| `fallbackRowCount` | `number` | `8` | Rows rendered if the scroll area has no size. |
-| `virtualizer` | `RowVirtualizer` | – | Inject a fake virtualizer in tests. |
-| `fetchNextPage` / `hasNextPage` / `isFetchingNextPage` | | | Directly compatible with `useInfiniteQuery`. |
-| `loadMoreThreshold` | `number` | `3` | Virtualized: fetch when the last rendered row is within N rows of the end. |
-| `rootMargin` / `threshold` | | `'200px'` / `0` | Non-virtualized IntersectionObserver. |
-| `isLoading` / `error` / `onRetry` | | | Drive Loading / Error states. |
-| `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'none'` | Click or Space toggles. |
-| `selectedKeys` / `defaultSelectedKeys` / `onSelectionChange` | | | Controlled / uncontrolled. |
+| Prop                                                         | Type                                | Default                              | Notes                                                                      |
+| ------------------------------------------------------------ | ----------------------------------- | ------------------------------------ | -------------------------------------------------------------------------- |
+| `items`                                                      | `TItem[]`                           | –                                    |                                                                            |
+| `getItemKey`                                                 | `(item) => string \| number`        | –                                    | Must be stable & unique; keys the measurement cache.                       |
+| `renderCard`                                                 | `(item, index) => ReactNode`        | –                                    | Identity changes don't re-render unchanged items.                          |
+| `renderKey`                                                  | `unknown`                           | –                                    | Change to force item re-render if `renderCard` closes over outside state.  |
+| `layout`                                                     | `ResponsiveValue<'list' \| 'grid'>` | `{ base: 'list', md: 'grid' }`       | Mobile-first.                                                              |
+| `columns`                                                    | `ResponsiveValue<1..6>`             | `{ base: 1, sm: 2, lg: 3, xl: 4 }`   | Only used while `grid`.                                                    |
+| `virtualized`                                                | `boolean`                           | `items.length > virtualizeThreshold` |                                                                            |
+| `virtualizeThreshold`                                        | `number`                            | `100`                                |                                                                            |
+| `estimateSize`                                               | `number`                            | `120`                                | Initial row height guess (px).                                             |
+| `overscan`                                                   | `number`                            | `4`                                  | Rows.                                                                      |
+| `rowGap`                                                     | `number`                            | `16`                                 | Virtual row gap (px); match your `gapClassName` (`gap-4` = 16).            |
+| `scrollElementRef`                                           | `RefObject<HTMLElement>`            | window                               | Custom scroller.                                                           |
+| `scrollMargin`                                               | `number`                            | measured                             | List offset in the scroll area.                                            |
+| `fallbackRowCount`                                           | `number`                            | `8`                                  | Rows rendered if the scroll area has no size.                              |
+| `virtualizer`                                                | `RowVirtualizer`                    | –                                    | Inject a fake virtualizer in tests.                                        |
+| `fetchNextPage` / `hasNextPage` / `isFetchingNextPage`       |                                     |                                      | Directly compatible with `useInfiniteQuery`.                               |
+| `loadMoreThreshold`                                          | `number`                            | `3`                                  | Virtualized: fetch when the last rendered row is within N rows of the end. |
+| `rootMargin` / `threshold`                                   |                                     | `'200px'` / `0`                      | Non-virtualized IntersectionObserver.                                      |
+| `isLoading` / `error` / `onRetry`                            |                                     |                                      | Drive Loading / Error states.                                              |
+| `selectionMode`                                              | `'none' \| 'single' \| 'multiple'`  | `'none'`                             | Click or Space toggles.                                                    |
+| `selectedKeys` / `defaultSelectedKeys` / `onSelectionChange` |                                     |                                      | Controlled / uncontrolled.                                                 |
 
 `Container` props: `className`, `gapClassName` (`gap-4`), `rowClassName`, `itemClassName`.
 
@@ -99,7 +99,7 @@ Prop getters: `getContainerProps()`, `getItemProps(item, index)`, `getSentinelPr
 
 - **Only visible rows exist in the DOM**: browser find-in-page (Ctrl+F) and screen-reader "read all" only see
   that window. `aria-setsize`/`aria-posinset` are provided on items (`setsize = -1` while more pages exist).
-  `aria-rowcount` is intentionally *not* set because it is invalid on `role="list"`.
+  `aria-rowcount` is intentionally _not_ set because it is invalid on `role="list"`.
 - **Dynamic heights**: unmeasured rows use `estimateSize`; a poor estimate causes small scrollbar jumps.
   Cards that change height after render (images) are re-measured by the ResizeObserver on the row.
 - **Row gap**: `rowGap` (JS) and `gapClassName` (CSS) must agree.

@@ -28,7 +28,11 @@ export function InventoryCard({ item }: { item: InventoryItem }) {
         )}
       >
         {item.quantity} {item.unit}
-        {low && <span className="ml-1 text-xs font-normal">{t('inventory.lowStock')}</span>}
+        {low && (
+          <span className="ml-1 text-xs font-normal">
+            {t('inventory.lowStock')}
+          </span>
+        )}
       </p>
     </article>
   )
