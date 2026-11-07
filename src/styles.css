@@ -1,7 +1,81 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/outfit';
+
+/* `dark:` follows the `.dark` class set by ThemeContext (not the OS setting). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f9fafb;
+  --foreground: #101828;
+  --card: #ffffff;
+  --card-foreground: #101828;
+  --muted: #f2f4f7;
+  --muted-foreground: #667085;
+  --border: #e4e7ec;
+  --primary: #465fff;
+  --primary-foreground: #ffffff;
+  --accent: #ecf3ff;
+  --accent-foreground: #3641f5;
+  --ring: #465fff;
+  --warning: #fb6514;
+  --success: #12b76a;
+  --destructive: #f04438;
+  --radius: 0.5rem;
+  --shadow-card-value: 0 1px 2px rgb(16 24 40 / 0.06);
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0c111d;
+  --foreground: #f9fafb;
+  --card: #101828;
+  --card-foreground: #f9fafb;
+  --muted: #1d2939;
+  --muted-foreground: #98a2b3;
+  --border: #1d2939;
+  --primary: #465fff;
+  --primary-foreground: #ffffff;
+  --accent: #1c2a5a;
+  --accent-foreground: #9cb9ff;
+  --ring: #465fff;
+  --warning: #fb6514;
+  --success: #32d583;
+  --destructive: #f97066;
+  --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans:
+    'Outfit Variable', 'Myanmar Text', 'Noto Sans Myanmar', 'Padauk',
+    ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --shadow-card: var(--shadow-card-value);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-destructive: var(--destructive);
+}
 
 * {
   box-sizing: border-box;
+  border-color: var(--border);
 }
 
 html,
@@ -12,4 +86,7 @@ body,
 
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
 }

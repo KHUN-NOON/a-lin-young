@@ -1,12 +1,14 @@
 import React from 'react'
 import { useInventory } from '@/hooks/useLiveQuery'
+import { useLanguage } from '@/context/LanguageContext'
 import type { InventoryItem } from '@/types'
 
 export const InventoryList: React.FC = () => {
   const items = useInventory()
+  const { t } = useLanguage()
 
-  if (!items?.length) {
-    return <p className="text-center text-muted">No items in inventory.</p>
+  if (!items.length) {
+    return <p className="text-center text-muted">{t('inventory.noItems')}</p>
   }
 
   return (
